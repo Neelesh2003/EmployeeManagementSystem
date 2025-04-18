@@ -1,0 +1,38 @@
+<h1>Employee Details</h1>
+<br>
+<div class="cardDiv">
+<mat-card class="form-card">
+<div *ngIf="employee">
+    <br>
+    <mat-label>Id :</mat-label>
+    {{selectedId}}
+    <hr>
+    <br>
+    <mat-label>Name :</mat-label>
+    {{employee.name}}     <hr>   <br>
+    <mat-label>Gender :</mat-label>
+    {{employee.gender}}     <hr>   <br>
+    <mat-label>Address :</mat-label>
+    {{employee.address}}       <hr> <br>
+    <mat-label>State :</mat-label>
+    {{employee.stateName}}       <hr> <br>
+    <mat-label>City :</mat-label>
+    {{employee.cityName}}       <hr> <br>
+    <mat-label>Zip Code :</mat-label>
+    {{employee.zip}}       <hr> <br>
+    <mat-label>DOB :</mat-label>
+    {{employee.dob | date:'dd-MM-YYYY'}}       <hr> <br>
+    <mat-label>DOJ :</mat-label>
+    {{employee.doj | date:'dd-MM-YYYY'}}       <hr> <br>
+    <mat-label>Department :</mat-label>
+    {{employee.departmentName}}       <hr> <br>
+    <mat-label>Phone Number :</mat-label>
+    {{employee.phone}}     <hr>   <br>
+    <mat-label>Email :</mat-label>
+    {{employee.email}}      <hr>  <br>
+    <br>
+    </div>
+    </mat-card>
+
+</div>
+

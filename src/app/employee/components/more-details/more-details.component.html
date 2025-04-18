@@ -1,0 +1,104 @@
+<mat-tab-group dynamicHeight>
+  
+  <mat-tab label="Personal Details">
+    <div class="example-box mat-elevation-z4">
+      <div class="cardDiv">
+        <mat-card class="form-card">
+          <div *ngIf="employee">
+            <br />
+            <mat-label>Name :</mat-label>
+            {{ employee.name }}
+            <hr />
+            <br />
+            <mat-label>DOB :</mat-label>
+            {{ employee.dob  | date :"dd/MM/YYYY" }}
+            <hr />
+            <br />
+            <mat-label>DOJ :</mat-label>
+            {{ employee.doj  | date :"dd/MM/YYYY" }}
+            <hr />
+            <br />
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Salary Details" >
+    <div class="example-box mat-elevation-z4">
+      <div class="cardDiv">
+        <mat-card class="form-card">
+          <div *ngIf="employee">
+            <br />
+            <div *ngFor="let salary of employee.salaries">
+              {{"Salary On :"}}
+              <hr>
+              <br>
+           <div class="amount">
+            <mat-label>Year :</mat-label>
+            {{ salary.year}},
+            
+            <div [ngSwitch]="salary.month">
+              <mat-label *ngSwitchCase="3">Month: March</mat-label>
+              <mat-label *ngSwitchCase="4">Month: April</mat-label>
+            </div>
+           
+            <mat-label>Amount :</mat-label>
+            {{ salary.amount}}
+            <hr />
+            <br />
+           </div>
+          </div>
+            <br />
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Address">
+    <div class="example-box mat-elevation-z4">
+      <div class="cardDiv">
+        <mat-card class="form-card">
+          <div *ngIf="employee">
+            <br />
+            <mat-label>Address :</mat-label>
+            {{ employee.address }}
+            <hr />
+            <br />
+            <mat-label>State :</mat-label>
+            {{ employee.stateName}}
+            <hr />
+            <br />
+            <mat-label>City :</mat-label>
+            {{ employee.cityName }}
+            <hr />
+            <br />
+            <mat-label>Zip Code :</mat-label>
+            {{ employee.zip }}
+            <hr />
+            <br />
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
+      <mat-tab label="Contact">
+        <div class="example-box mat-elevation-z4">
+          <div class="cardDiv">
+            <mat-card class="form-card">
+              <div *ngIf="employee">
+                <br />
+                <mat-label>Phone Number :</mat-label>
+                {{ employee.phone }}
+                <hr />
+                <br />
+                <mat-label>Email :</mat-label>
+                {{ employee.email }}
+                <hr />
+                <br />
+                <br />
+              </div>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+</mat-tab-group>

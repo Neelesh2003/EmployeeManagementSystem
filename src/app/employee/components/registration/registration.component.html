@@ -1,0 +1,360 @@
+<block-ui>
+<div class="container">
+  <mat-card class="form-card">
+    <div class="header">
+      <h2>Registration Form</h2>
+      <mat-slide-toggle (change)="isFormDisabled = !isFormDisabled">
+        <span style="color: white">Enable Form</span>
+      </mat-slide-toggle>
+    </div>
+
+      <form
+        #employeeForm="ngForm"
+        (ngSubmit)="
+          selectedId == null
+            ? onSubmit(employeeForm)
+            : updateEmployee(employeeForm)
+        "
+        novalidate
+      >
+        <!-- Name -->
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input
+            matInput
+            name="name"
+            ngModel
+            required
+            maxlength="100"
+            pattern="^[a-zA-Z ]+$"
+            placeholder="Name"
+            #name="ngModel"
+            [disabled]="isFormDisabled"
+            [(ngModel)]="employee.name"
+          />
+        </mat-form-field>
+        <div
+          class="alert alert-danger"
+          *ngIf="name.invalid && (name.dirty || name.touched)"
+        >
+          <div *ngIf="name.errors?.['required']">Name is required*</div>
+          <div *ngIf="name.errors?.['maxlength']">
+            Max 100 characters allowed*
+          </div>
+          <div *ngIf="name.errors?.['pattern']">
+            Only letters and spaces allowed*
+          </div>
+        </div>
+
+        <!-- Gender Dropdown -->
+        <mat-form-field appearance="outline">
+          <mat-label>Gender</mat-label>
+          <mat-select
+            name="gender"
+            #gender="ngModel"
+            ngModel
+            required
+            [disabled]="isFormDisabled"
+            [(ngModel)]="employee.gender"
+          >
+            <mat-option *ngFor="let gen of genders" [value]="gen">{{
+              gen
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div
+          class="alert alert-danger"
+          *ngIf="gender.invalid && (gender.dirty || gender.touched)"
+        >
+          <div *ngIf="gender.errors?.['required']">Gender is required*</div>
+        </div>
+
+        <!-- Date of Birth -->
+        <mat-form-field appearance="outline">
+          <mat-label>Date of Birth</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            name="dob"
+            #dob="ngModel"
+            min="1990-12-30"
+            ngModel
+            required
+            [disabled]="isFormDisabled"
+            [(ngModel)]="employee.dob"
+            (ngModelChange)="isEligible()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker ></mat-datepicker>
+        </mat-form-field>
+        <div
+          class="alert alert-danger"
+          *ngIf="dob.invalid && (dob.dirty || dob.touched)"
+        >
+          <div *ngIf="dob.errors?.['required']">Dob is required*</div>
+        </div>
+
+        <!-- Phone -->
+        <mat-form-field appearance="outline">
+          <mat-label>Phone Number</mat-label>
+          <input
+            matInput
+            name="phone"
+            ngModel
+            required
+            #phone="ngModel"
+            mask="000 000 0000"
+            placeholder="Ex. XXX XXX XXXX"
+            minlength="10"
+            maxlength="12"
+            [disabled]="isFormDisabled"
+            [(ngModel)]="employee.phone"
+          />
+        </mat-form-field>
+        <div
+          class="alert alert-danger"
+          *ngIf="phone.invalid && (phone.dirty || phone.touched)"
+        >
+          <div *ngIf="phone.errors?.['required']">
+            Phone number is required*
+          </div>
+          <div *ngIf="phone.errors?.['minlength']">
+            Phone number should be 10 digits*
+          </div>
+        </div>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input
+            matInput
+            name="email"
+            ngModel
+            required
+            type="email"
+            #email="ngModel"
+            appCustomeEmail
+            placeholder="Email address"
+            [disabled]="isFormDisabled"
+            [(ngModel)]="employee.email"
+        /></mat-form-field>
+        <div
+          class="alert alert-danger"
+          *ngIf="email.invalid && (email.dirty || email.touched)"
+        >
+          <div *ngIf="email.errors?.['required']">Email is required*</div>
+          <div *ngIf="email.errors?.['invalidEmail']">
+            Invalid email format*.
+          </div>
+        </div>
+
+        <!-- Department Dropdown -->
+        <mat-form-field appearance="outline">
+          <mat-label>Department</mat-label>
+          <mat-select
+            name="department"
+            #department="ngModel"
+            ngModel
+            required
+            [disabled]="isFormDisabled"
+          >
+            <mat-option *ngFor="let dep of departments" [value]="dep">{{
+              dep.name
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div
+          class="alert alert-danger"
+          *ngIf="department.invalid && (department.dirty || department.touched)"
+        >
+          <div *ngIf="department.errors?.['required']">
+            Department is required*
+          </div>
+        </div>
+
+        <!-- Address -->
+        <mat-form-field appearance="outline">
+          <mat-label>Address</mat-label>
+          <textarea
+            matInput
+            name="address"
+            ngModel
+            required
+            placeholder="Address"
+            #address="ngModel"
+            [disabled]="isFormDisabled"
+            [(ngModel)]="employee.address"
+          ></textarea>
+        </mat-form-field>
+        <div
+          class="alert alert-danger"
+          *ngIf="address.invalid && (address.dirty || address.touched)"
+        >
+          <div *ngIf="address.errors?.['required']">Address is required*</div>
+        </div>
+
+        <!-- State -->
+        <mat-form-field appearance="outline">
+          <mat-label>State</mat-label>
+          <mat-select
+            matInput
+            name="states"
+            ngModel
+            required
+            placeholder="State"
+            #state="ngModel"
+            [disabled]="isFormDisabled"
+            [(ngModel)]="employee.stateName"
+          >
+            <mat-option
+              *ngFor="let state of statesWithCities"
+              [value]="state"
+              (click)="onStateChange($event)"
+              >{{ state.stateName }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <div
+          class="alert alert-danger"
+          *ngIf="state.invalid && (state.dirty || state.touched)"
+        >
+          <div *ngIf="state.errors?.['required']">State is required*</div>
+        </div>
+
+        <!-- City -->
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <mat-select
+            matInput
+            name="city"
+            required
+            placeholder="City"
+            #city="ngModel"
+            [disabled]="isFormDisabled"
+            [(ngModel)]="employee.cityName"
+          >
+            <mat-option *ngFor="let city of empCities" [value]="city">{{
+              city.name
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div
+          class="alert alert-danger"
+          *ngIf="city.invalid && (city.dirty || city.touched)"
+        >
+          <div *ngIf="city.errors?.['required']">City is required*</div>
+          <div *ngIf="city.errors?.['pattern']">
+            Only letters and spaces allowed*
+          </div>
+        </div>
+
+        <!-- Zip Code -->
+        <mat-form-field appearance="outline">
+          <mat-label>Zip Code</mat-label>
+          <input
+            matInput
+            name="zip"
+            ngModel
+            required
+            #zip="ngModel"
+            mask="00 0000"
+            placeholder="Ex. XX XXXX"
+            maxlength="7"
+            [disabled]="isFormDisabled"
+            [(ngModel)]="employee.zip"
+          />
+        </mat-form-field>
+        <div
+          class="alert alert-danger"
+          *ngIf="zip.invalid && (zip.dirty || zip.touched)"
+        >
+          <div *ngIf="zip.errors?.['required']">Zip code is required*</div>
+          <div *ngIf="zip.errors?.['pattern']">Format: 12 3456*</div>
+        </div>
+
+        <!-- Date of Joining -->
+        <mat-form-field appearance="outline">
+          <mat-label>Date of Joining</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker2"
+            name="doj"
+            #doj="ngModel"
+            [min]="minimumDate"
+            [max] ="maxDate"
+            ngModel
+            [disabled]="isFormDisabled"
+            [(ngModel)]="employee.doj"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker2"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Date of Leaving -->
+        <div *ngIf="selectedId != null">
+          <mat-form-field appearance="outline">
+            <mat-label>Date of Leaving</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker3"
+              name="dol"
+              #dol="ngModel"
+              [min]="employee.doj"
+              [max]="maxDate"
+              ngModel
+              [disabled]="isFormDisabled"
+              [(ngModel)]="employee.dol"
+              [readonly]="true"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker3"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker3></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <!-- Terms Checkbox -->
+        <mat-checkbox
+          name="terms"
+          [(ngModel)]="ischecked"
+          required
+          [disabled]="isFormDisabled"
+        >
+          I accept the terms and conditions
+        </mat-checkbox>
+
+        <div *ngIf="selectedId == null; then ifBlock; else elseBlock"></div>
+        <div class="sendButton">
+          <ng-template #ifBlock>
+            <button
+              type="submit"
+              mat-raised-button
+              color="primary"
+              [disabled]="!ischecked || employeeForm.invalid || isFormDisabled"
+            >
+              Register
+            </button>
+          </ng-template>
+          <ng-template #elseBlock>
+            <button
+              type="submit"
+              mat-raised-button
+              color="primary"
+              [disabled]="!ischecked || employeeForm.invalid || isFormDisabled"
+            >
+              Edit
+            </button>
+          </ng-template>
+        </div>
+      </form>
+  </mat-card>
+</div>
+</block-ui>

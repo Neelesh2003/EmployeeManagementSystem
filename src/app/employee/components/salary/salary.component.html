@@ -1,0 +1,155 @@
+<div class="container">
+  <mat-card class="form-card">
+    <div class="header">
+      <h2>Add Salary</h2>
+      <mat-slide-toggle (change)="isFormDisabled = !isFormDisabled">
+        <span style="color: white">Enable Form</span>
+      </mat-slide-toggle>
+    </div>
+
+    <block-ui>
+    <form
+      #employeeSalaryForm="ngForm"
+      (ngSubmit)="onSubmit(employeeSalaryForm)"
+      novalidate
+    >
+      <!-- Employee Dropdown -->
+
+      <mat-form-field appearance="outline">
+        <mat-label>Employee</mat-label>
+        <mat-select
+          name="employee"
+          placeholder="Employee"
+          #name="ngModel"
+          required
+          [disabled]="isFormDisabled"
+          [(ngModel)]="selectedEmp"
+          ><mat-option *ngFor="let emp of employees" [value]="emp">{{
+            emp.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div
+        class="alert alert-danger"
+        *ngIf="name.invalid && (name.dirty || name.touched)"
+      >
+        <div *ngIf="name.errors?.['required']">Employee is required*</div>
+      </div>
+
+      <!-- Year Dropdown -->
+      <mat-form-field appearance="outline">
+        <mat-label>Year</mat-label>
+        <mat-select
+          name="year"
+          #year="ngModel"
+          ngModel
+          required
+          [disabled]="isFormDisabled"
+          [(ngModel)]="salary.year"
+        >
+          <mat-option *ngFor="let yr of years" [value]="yr" >{{
+            yr
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div
+        class="alert alert-danger"
+        *ngIf="year.invalid && (year.dirty || year.touched)"
+      >
+        <div *ngIf="year.errors?.['required']">Year is required*</div>
+      </div>
+
+      <!-- Month Dropdown -->
+      <mat-form-field appearance="outline">
+        <mat-label>Month</mat-label>
+        <mat-select
+          name="month"
+          #month="ngModel"
+          required
+          [disabled]="isFormDisabled"
+          [(ngModel)]="salary.month"
+        >
+          <mat-option *ngFor="let month of months" [value]="month.id">{{
+            month.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div
+        class="alert alert-danger"
+        *ngIf="month.invalid && (month.dirty || month.touched)"
+      >
+        <div *ngIf="month.errors?.['required']">Month is required*</div>
+      </div>
+
+      <!-- Salary -->
+      <mat-form-field appearance="outline">
+        <mat-label>Amount</mat-label>
+        <input
+          matInput
+          type="text"
+          min="15000"
+          mask="00,000"
+          placeholder="Ex. XX,XXX"
+          maxlength="6"
+          name="amount"
+          #amount="ngModel"
+          [disabled]="isFormDisabled"
+          [(ngModel)]="salary.amount"
+          required
+        />
+      </mat-form-field>
+      <div
+        class="alert alert-danger"
+        *ngIf="amount.invalid && (amount.dirty || amount.touched)"
+      >
+        <div *ngIf="amount.errors?.['required']">Salary is required*</div>
+        <div *ngIf="amount.errors?.['min']">
+          Salary should be greater than 15k*
+        </div>
+      </div>
+
+      <!-- Remark -->
+      <mat-form-field appearance="outline">
+        <mat-label>Remark</mat-label>
+        <textarea
+          matInput
+          placeholder="Remark"
+          name="remark"
+          #remark="ngModel"
+          [disabled]="isFormDisabled"
+          [(ngModel)]="salary.remark"
+        ></textarea>
+      </mat-form-field>
+
+      <!-- Terms Checkbox -->
+      <mat-checkbox
+        name="terms"
+        [(ngModel)]="ischecked"
+        required
+        [disabled]="isFormDisabled"
+      >
+        I accept the terms and conditions
+      </mat-checkbox>
+
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="!ischecked || employeeSalaryForm.invalid || isFormDisabled"
+      >
+        Save
+      </button>
+
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        [disabled]=" isFormDisabled"
+        (click)="goTotable()"
+      >
+        Cancel
+      </button>
+    </form>
+  </block-ui>
+  </mat-card>
+</div>
